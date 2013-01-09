@@ -18,6 +18,7 @@
 @property int day;                           //day number of the focused day in the displayed month
 @property int lastDayOfMonth;                //number of days in the displayed month
 @property int accumulator;                   //accumulator for the displayed month
+@property (strong, nonatomic) UIPopoverController* datePopover;
 
 @end
 
@@ -29,12 +30,43 @@
    NSDate *returnValue = [NSDate dateWithTimeIntervalSince1970:epoch];
    return returnValue;
 }
+-(BOOL)isEquinox:(NSDate *)d
+{
+   //Return true if it is the equinox
+   /*
+   BOOL returnValue = NO;
+   NSDate *eqDate;
+   eqDate = [NSDateComponents ]
+   2000-03-20 07:35
+   2001-03-20 13:31
+   2002-03-20 19:16
+   2003-03-21 01:00
+   2004-03-20 06:49
+   2005-03-20 12:33
+   2006-03-20 18:26
+   2007-03-21 00:07
+   2008-03-20 05:48
+   2009-03-20 11:44
+   2010-03-20 17:32
+   2011-03-20 23:21
+   2012-03-20 05:14
+   2013-03-20 11:02
+   2014-03-20 16:57
+   2015-03-20 22:45
+   2016-03-20 04:30
+   2017-03-20 10:28
+   2018-03-20 16:15
+   2019-03-20 21:58
+   2020-03-20 03:50
+    */
+   return NO;
+}
 -(UIView *)calendarDay:(int)d date:(NSDate *)date width:(float)w height:(float)h blank:(BOOL)blankFlag todayIs:(int)today sinceEpoch:(long)daysSinceEpoch
 {
    //d is the day number in the month of the 28/293 calendar
    //date is the date of that day.
    UIView *frameView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, w, h)];
-   [frameView setBackgroundColor:[UIColor grayColor]];
+   [frameView setBackgroundColor:[UIColor lightGrayColor]];
    w = w*0.99;
    h = h*0.99;
    //daysSinceEpoch is the number of days that "today" is after the epoch. It is a special day if
@@ -53,7 +85,7 @@
       UILabel *dayNumber = [[UILabel alloc] init];
       dayNumber.text = [NSString stringWithFormat:@" %2d",d];
       //NSLog(@"Width is %f",w);
-      dayNumber.font = [UIFont boldSystemFontOfSize:w/6];
+      dayNumber.font = [UIFont boldSystemFontOfSize:w/8];
       dayNumber.frame = CGRectMake(0,0,w/2,h/5);
       [dayNumber sizeToFit];
       dayNumber.frame = CGRectMake(0,0,dayNumber.frame.size.width,dayNumber.frame.size.height);
@@ -96,7 +128,7 @@
       }
       gregDate.textAlignment = NSTextAlignmentRight;
       gregDate.frame = CGRectMake(w/2,0,w/2,h/5);
-      gregDate.font = [UIFont systemFontOfSize:w/8];
+      gregDate.font = [UIFont systemFontOfSize:w/10];
       [gregDate sizeToFit];
       gregDate.frame = CGRectMake(w-gregDate.frame.size.width,0,gregDate.frame.size.width,gregDate.frame.size.height);
       gregDate.backgroundColor = [UIColor clearColor];
@@ -127,11 +159,18 @@
       if (notation != @"") {
          UILabel *notationLabel = [[UILabel alloc] init];
          notationLabel.text = notation;
+         notationLabel.font = [UIFont systemFontOfSize:w/9];
          [notationLabel sizeToFit];
          notationLabel.center = dayToReturn.center;
          //specialDayNotation.frame.origin.y = dayToReturn.bounds.size.height - specialDayNotation.frame.size.height;
          notationLabel.center = CGPointMake(notationLabel.center.x,dayToReturn.frame.size.height - notationLabel.frame.size.height);
          notationLabel.backgroundColor = [UIColor clearColor];
+         //If notation is too big, reduce the size
+         if (notationLabel.frame.size.width > dayToReturn.bounds.size.width) {
+            //Scale the view
+            CGSize labelSize = CGSizeMake(dayToReturn.bounds.size.width, dayToReturn.bounds.size.height);
+            [notationLabel sizeThatFits:labelSize];
+         }
          [dayToReturn addSubview:notationLabel];
       }
 
@@ -148,6 +187,7 @@
 {
    [self takedown];
    self.displayedDate = d;
+   NSLog(@"showMonthContainingDate: self.displayedDate = %@",self.displayedDate);
    NSDate *epoch = [self epoch];
    NSTimeZone *currentTimeZone = [NSTimeZone localTimeZone];
    NSInteger currentGMTOffset = [currentTimeZone secondsFromGMTForDate:epoch];
@@ -197,12 +237,24 @@
    self.accumulator = acc;
    //NSLog(@"Calling showHEading");
    [self showHeading];
+   //Bring date picker to front if it exists
+   for (UIDatePicker *datePicker in self.view.subviews) {
+      if (datePicker.tag == 999) {
+         [self.view bringSubviewToFront:datePicker];
+      }
+   }
 }
 -(void)showHeading
 {
    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-   [dateFormat setDateFormat:@"YYYY"];
+   //
+   NSTimeZone *currentTimeZone = [NSTimeZone localTimeZone];
+   [dateFormat setTimeZone:currentTimeZone];
+   //
+   [dateFormat setDateFormat:@"yyyy"];
+   NSLog(@"About to use self.displayedDate: %@",self.displayedDate);
    NSString *gregorianYear = [dateFormat stringFromDate:self.displayedDate];
+   NSLog(@"Calculated Gregorian year: %@ from date %@",gregorianYear,self.displayedDate);
    NSString *headingString = [NSString stringWithFormat:@"Year: %ld Month: %d Acc.: %d Greg. Year: %@",self.year,self.month,self.accumulator,gregorianYear];
    UILabel *headingLabel = [[UILabel alloc] init];
    headingLabel.text = headingString;
@@ -232,7 +284,11 @@
     [super viewDidLoad];
    NSDate *dayToDisplay = [NSDate date];
    self.displayedDate = dayToDisplay;
+   NSLog(@"viewDidLoad self.displayedDate = %@",self.displayedDate);
    //NSLog(@"Calling showMOnthContainingDate from viewWillLayoutSubvuews");
+}
+- (IBAction)swipeIphone:(UISwipeGestureRecognizer *)sender {
+   [self swipe:sender];
 }
 - (IBAction)swipe:(UISwipeGestureRecognizer *)sender {
    //swipe right
@@ -242,9 +298,17 @@
       //[self takedown];
       //NSLog(@"Calculate new date from %d days after %@",-28*86400,self.displayedDate);
       self.displayedDate = [NSDate dateWithTimeInterval:-28*86400 sinceDate:self.displayedDate];
-      //NSLog(@"Resulting date is %@",self.displayedDate);
+      NSLog(@"swipe Resulting date is %@",self.displayedDate);
       //NSLog(@"Calling showMonthContainingDate from swipe");
       [self showMonthContainingDate:self.displayedDate];
+   }
+}
+- (IBAction)swipeLeftIphone:(UISwipeGestureRecognizer *)sender {
+   [self swipeLeft:sender];
+   if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+      //iPhone code goes here
+   } else  {
+      //ipad code goes here
    }
 }
 - (IBAction)swipeLeft:(UISwipeGestureRecognizer *)sender {
@@ -254,13 +318,18 @@
       //[self takedown];
       //NSLog(@"Calculate new date from %d days after %@",self.lastDayOfMonth+1,self.displayedDate);
       self.displayedDate = [NSDate dateWithTimeInterval:(self.lastDayOfMonth+1)*86400 sinceDate:self.displayedDate];
-      //NSLog(@"Resulting date is %@",self.displayedDate);
+      NSLog(@"swipeLeft Resulting date is %@",self.displayedDate);
       //NSLog(@"Calling showMonthContainingDate from swipeLeft");
       [self showMonthContainingDate:self.displayedDate];
    }
 }
 -(void)displayDate:(long)date day:(int)d month:(int)m year:(long)year dow:(int)dow acc:(int)acc gregDate:(NSDate *)dayToDisplay
 {
+   UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 216, 320, 216)];
+   [datePicker setDate:[NSDate date]];  //This is the default
+   [datePicker setHidden:NO];
+   [self.view addSubview:datePicker];
+
    //Explanation of the arguments.
    /*
     date Number of days since epoch corresponding to day being displayed.
@@ -317,6 +386,7 @@
          if ((calendarDay < 0)||(calendarDay > lastDayOfMonth)) {
             // blank day
             thisWeek = [thisWeek stringByAppendingString:@"** "];
+            //NSLog(@"calendarDay:%d date:%@",calendarDay,gregDate);
             UIView *calendarDayView = [self calendarDay:calendarDay date:gregDate width:dayWidth height:dayHeight blank:YES todayIs:d sinceEpoch:sequentialDayNumber];
             calendarDayView.center = CGPointMake(dayno*dayWidth+dayWidth/2, yPos);
             [self.view addSubview:calendarDayView];
@@ -330,7 +400,7 @@
             UIView *calendarDayView = [self calendarDay:calendarDay date:gregDate width:dayWidth height:dayHeight blank:NO todayIs:d sinceEpoch:sequentialDayNumber];
             calendarDayView.center = CGPointMake(dayno*dayWidth+dayWidth/2, yPos);
             //NSLog(@"Add view centered at (%f,%f) with size (%f,%f)",calendarDayView.center.x,calendarDayView.center.y,calendarDayView.frame.size.width,calendarDayView.frame.size.height);
-            //[calendarDayView setBackgroundColor:[UIColor grayColor]];
+            //[calendarDayView setBackgroundColor:[UIColor lightGrayColor]];
             [self.view addSubview:calendarDayView];
          }
       }
@@ -340,6 +410,48 @@
       thisWeek = @"";
       startOfWeek += 7;
    } while (startOfWeek < 29);
+}
+//Date picker not in popover (iPhone does not use popovers)
+-(void)iphoneSelectADate: (CGPoint)p
+{
+   //UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 216, 320, 216)];
+   //[datePicker setDate:[NSDate date]];  //This is the default
+   //[datePicker setHidden:NO];
+   //[self.view addSubview:datePicker];
+   for (UIDatePicker *datePicker in self.view.subviews) {
+      if ([datePicker isKindOfClass:[UIDatePicker class]]) {
+         [datePicker setHidden:NO];
+         [self.view bringSubviewToFront:datePicker];
+      }
+   }
+}
+
+//Date picker in popover
+-(void)selectADate: (CGPoint)p
+{
+   UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
+   
+   UIView *popoverView = [[UIView alloc] init];   //view
+   popoverView.backgroundColor = [UIColor blackColor];
+   
+   UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
+   datePicker.frame=CGRectMake(0,44,320, 216);
+   datePicker.datePickerMode = UIDatePickerModeDate;
+   [datePicker setTag:10];
+   datePicker.date = self.displayedDate;
+   [datePicker addTarget:self action:@selector(pickerChanged:) forControlEvents:UIControlEventValueChanged];
+   [popoverView addSubview:datePicker];
+   
+   popoverContent.view = popoverView;
+   UIPopoverController * popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+   //popoverController.delegate=self;
+   self.datePopover = popoverController;
+   [popoverController setPopoverContentSize:CGSizeMake(320, 264) animated:NO];
+   CGRect popoverLocation = CGRectMake(p.x-160, p.y-200, 320, 216);
+   [popoverController presentPopoverFromRect:popoverLocation inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];//tempButton.frame where you need you can put that frame//
+}
+- (IBAction)tapIphone:(UITapGestureRecognizer *)sender {
+   [self tap:sender];
 }
 - (IBAction)tap:(UITapGestureRecognizer *)sender {
    //tap gesture recognizer
@@ -362,12 +474,20 @@
          UILabel * headingLabel = (UILabel *) dayCell;
          if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:self.view])) {
             NSLog(@"The heading was tapped");
-
-            CGRect pickerFrame = CGRectMake(0,250,300,300);
+            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+               //iPhone code goes here
+               [self iphoneSelectADate:[sender locationInView:self.view]];
+            } else  {
+               [self selectADate:[sender locationInView:self.view]];
+            }
+            /*CGRect pickerFrame = CGRectMake(0,0,320,216);
             UIDatePicker *myPicker = [[UIDatePicker alloc] initWithFrame:pickerFrame];
             [myPicker addTarget:self action:@selector(pickerChanged:)               forControlEvents:UIControlEventValueChanged];
             myPicker.hidden = NO;
-            [self.view addSubview:myPicker];
+            myPicker.tag = 999;
+            [[[headingLabel superview] superview] addSubview:myPicker];
+            [[[headingLabel superview] superview] bringSubviewToFront:myPicker];
+            */
          }
       }
    }
@@ -375,6 +495,9 @@
 - (void)pickerChanged:(id)sender
 {
    NSLog(@"value: %@",[sender date]);
+   self.displayedDate = [sender date];
+   NSLog(@"Updated date is %@",self.displayedDate);
+   [self showMonthContainingDate:[sender date]];
 }
 -(void)takedown
 {
