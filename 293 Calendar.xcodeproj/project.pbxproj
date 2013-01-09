@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A75337A7169E1CE4000D88FF /* DayView.m in Sources */ = {isa = PBXBuildFile; fileRef = A75337A6169E1CE4000D88FF /* DayView.m */; };
 		A7A81D7C16960356005F85B3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7A81D7B16960356005F85B3 /* UIKit.framework */; };
 		A7A81D7E16960356005F85B3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7A81D7D16960356005F85B3 /* Foundation.framework */; };
 		A7A81D8016960356005F85B3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7A81D7F16960356005F85B3 /* CoreGraphics.framework */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A75337A5169E1CE4000D88FF /* DayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayView.h; sourceTree = "<group>"; };
+		A75337A6169E1CE4000D88FF /* DayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayView.m; sourceTree = "<group>"; };
 		A7A81D7716960356005F85B3 /* 293 Calendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "293 Calendar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7A81D7B16960356005F85B3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A7A81D7D16960356005F85B3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -91,6 +94,8 @@
 				A7A81D9616960356005F85B3 /* MainStoryboard_iPad.storyboard */,
 				A7A81D9916960356005F85B3 /* _8293calViewController.h */,
 				A7A81D9A16960356005F85B3 /* _8293calViewController.m */,
+				A75337A5169E1CE4000D88FF /* DayView.h */,
+				A75337A6169E1CE4000D88FF /* DayView.m */,
 				A7A81D8216960356005F85B3 /* Supporting Files */,
 			);
 			path = "293 Calendar";
@@ -181,6 +186,7 @@
 				A7A81D8816960356005F85B3 /* main.m in Sources */,
 				A7A81D8C16960356005F85B3 /* _8293calAppDelegate.m in Sources */,
 				A7A81D9B16960356005F85B3 /* _8293calViewController.m in Sources */,
+				A75337A7169E1CE4000D88FF /* DayView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,6 +312,7 @@
 				A7A81DA016960356005F85B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
