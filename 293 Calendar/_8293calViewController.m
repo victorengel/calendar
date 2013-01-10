@@ -110,6 +110,8 @@
       headingLabel.center = CGPointMake(self.view.bounds.size.width/2, 50.0);
    }
    [self.view addSubview:headingLabel];
+   NSLog(@"***** self.view %@",self.view);
+   NSLog(@"***** headingLabel %@",headingLabel);
 }
 -(void)viewWillLayoutSubviews
 {
@@ -228,22 +230,6 @@
       startOfWeek += 7;
    } while (startOfWeek < 29);
 }
-//Date picker not in popover (iPhone does not use popovers)
--(void)iphoneSelectADate: (CGPoint)p
-{
-   UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 216, 320, 216)];
-   [datePicker setDate:[NSDate date]];  //This is the default
-   [datePicker setHidden:NO];
-   //[self.view addSubview:datePicker];
-   dispatch_async(dispatch_get_main_queue(), ^ { [self.view addSubview:datePicker]; });
-   for (UIDatePicker *datePicker in self.view.subviews) {
-      if ([datePicker isKindOfClass:[UIDatePicker class]]) {
-         [datePicker setHidden:NO];
-         [self.view bringSubviewToFront:datePicker];
-      }
-   }
-}
-
 //Date picker in popover
 -(void)selectADate: (CGPoint)p
 {
@@ -259,6 +245,11 @@
       //[datePicker setEnabled:YES];
       //[datePicker setHidden:NO];
       [self.view.superview addSubview:datePicker];
+      NSLog(@"***************");
+      NSLog(@"%@",self.view);
+      NSLog(@"***************");
+      NSLog(@"%@",self.view.superview);
+      NSLog(@"***************");
       //[self.view bringSubviewToFront:datePicker];
       //[datePicker setNeedsDisplay];
       //[datePicker setUserInteractionEnabled:YES];
