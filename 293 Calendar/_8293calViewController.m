@@ -115,7 +115,18 @@
 }
 -(void)viewWillLayoutSubviews
 {
-   NSLog(@"viewWillLayoutSubviews");
+   //NSLog(@"#######viewWillLayoutSubviews");
+   //NSDate *dayToDisplay = self.displayedDate;
+   //[self showMonthContainingDate:dayToDisplay];
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+   NSLog(@"######viewWillAppear");
+   NSDate *dayToDisplay = self.displayedDate;
+   [self showMonthContainingDate:dayToDisplay];
+}
+-(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
    NSDate *dayToDisplay = self.displayedDate;
    [self showMonthContainingDate:dayToDisplay];
 }
@@ -244,10 +255,10 @@
       //datePicker.center = self.view.center;
       //[datePicker setEnabled:YES];
       //[datePicker setHidden:NO];
-      [self.view.superview addSubview:datePicker];
+      //[self.view.superview addSubview:datePicker];
       //Line below this comment does not work. Line above does, but then the datePicker is one layer too high and does not rotate
       //with orientation change.
-      //[self.view addSubview:datePicker];
+      [self.view addSubview:datePicker];
       NSLog(@"***************");
       NSLog(@"%@",self.view);
       NSLog(@"***************");
