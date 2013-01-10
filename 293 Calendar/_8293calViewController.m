@@ -115,9 +115,14 @@
 }
 -(void)viewWillLayoutSubviews
 {
-   //NSLog(@"#######viewWillLayoutSubviews");
-   //NSDate *dayToDisplay = self.displayedDate;
-   //[self showMonthContainingDate:dayToDisplay];
+   if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+      //iPhone code goes here
+   } else  {
+      //ipad code goes here
+      NSLog(@"#######viewWillLayoutSubviews");
+      NSDate *dayToDisplay = self.displayedDate;
+      [self showMonthContainingDate:dayToDisplay];
+   }
 }
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -127,6 +132,7 @@
 }
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
+   NSLog(@"######willAnimateRotationToInterfaceOrientation");
    NSDate *dayToDisplay = self.displayedDate;
    [self showMonthContainingDate:dayToDisplay];
 }
@@ -172,6 +178,7 @@
       dayWidth = self.view.bounds.size.width/7;
       dayHeight = (self.view.bounds.size.height-100)/5;
    }
+   NSLog(@"###The calculated cell dimensions are %f,%f",dayWidth,dayHeight);
    return CGPointMake(dayWidth, dayHeight);
 }
 
