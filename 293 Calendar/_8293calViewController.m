@@ -245,6 +245,9 @@
       //[datePicker setEnabled:YES];
       //[datePicker setHidden:NO];
       [self.view.superview addSubview:datePicker];
+      //Line below this comment does not work. Line above does, but then the datePicker is one layer too high and does not rotate
+      //with orientation change.
+      //[self.view addSubview:datePicker];
       NSLog(@"***************");
       NSLog(@"%@",self.view);
       NSLog(@"***************");
@@ -266,9 +269,6 @@
       CGRect popoverLocation = CGRectMake(p.x-160, p.y-200, 320, 216);
       [popoverController presentPopoverFromRect:popoverLocation inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];//tempButton.frame where you need you can put that frame//
    }
-}
-- (IBAction)tapIphone:(UITapGestureRecognizer *)sender {
-   [self tap:sender];
 }
 - (IBAction)tap:(UITapGestureRecognizer *)sender {
    //First check if a date picker is on screen, in which case dismiss it if tap is outside of date picker

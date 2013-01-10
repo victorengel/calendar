@@ -14,18 +14,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="A3U-ji-2jD" appends="YES" id="iCI-l5-5Jf"/>
                             <outletCollection property="gestureRecognizers" destination="Ubt-e2-dxS" appends="YES" id="wV0-hS-gnB"/>
                             <outletCollection property="gestureRecognizers" destination="IWA-aW-jMW" appends="YES" id="61h-J1-dQF"/>
+                            <outletCollection property="gestureRecognizers" destination="53n-VW-fVF" appends="YES" id="7G8-PO-VXL"/>
                         </connections>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="A3U-ji-2jD">
-                    <connections>
-                        <action selector="tapIphone:" destination="2" id="BNG-22-2JR"/>
-                    </connections>
-                </tapGestureRecognizer>
                 <swipeGestureRecognizer direction="right" id="Ubt-e2-dxS">
                     <connections>
                         <action selector="swipeIphone:" destination="2" id="ar2-kN-UEx"/>
@@ -36,9 +31,27 @@
                         <action selector="swipeLeftIphone:" destination="2" id="cES-K7-M7g"/>
                     </connections>
                 </swipeGestureRecognizer>
+                <tapGestureRecognizer id="53n-VW-fVF">
+                    <connections>
+                        <action selector="tap:" destination="2" id="1op-Qe-tyH"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
         </scene>
     </scenes>
+    <classes>
+        <class className="_8293calViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/_8293calViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="swipe:" candidateClass="UISwipeGestureRecognizer"/>
+                <relationship kind="action" name="swipeIphone:" candidateClass="UISwipeGestureRecognizer"/>
+                <relationship kind="action" name="swipeLeft:" candidateClass="UISwipeGestureRecognizer"/>
+                <relationship kind="action" name="swipeLeftIphone:" candidateClass="UISwipeGestureRecognizer"/>
+                <relationship kind="action" name="tap:" candidateClass="UITapGestureRecognizer"/>
+                <relationship kind="action" name="tapIphone:" candidateClass="UITapGestureRecognizer"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
