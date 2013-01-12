@@ -24,15 +24,44 @@
 @end
 
 @implementation _8293calViewController
-
-
+/*-(IBAction)PickerView:(id)sender
+{
+   pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 200, 320, 200)];
+   //pickerView.delegate = self;
+}*/
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+   NSLog(@"pickerView:numberOfRowsInComponent:");
+   return [calPickerData count]; //hard code for now -- will need to calculate per component eventually.
+}
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+   NSLog(@"numberOfComponentsInPickerView:");
+   return 1; //start out with a 1 component picker for now.
+}
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+   NSLog(@"pickerView:didSelectRow:inComponent:");
+   //
+   NSString *selectedItem = [NSString stringWithFormat:@"%@",[calPickerData objectAtIndex:[calPickerView selectedRowInComponent:0]]];
+   NSLog(@"Selected item: %@",selectedItem);
+   //
+}
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+   NSLog(@"pickerView:titleForRow:forComponent:");
+   return [calPickerData objectAtIndex:row];
+   NSLog(@"pickerView:titleForRow:");
+}
 -(NSDate *)epoch {
+   NSLog(@"epoch");
    long epoch = 1356048000;
    NSDate *returnValue = [NSDate dateWithTimeIntervalSince1970:epoch];
    return returnValue;
 }
 - (void)showMonthContainingDate:(NSDate*)d
 {
+   NSLog(@"showMonthContainingDate");
    [self takedown];//Remove a previously displayed month, if present.
    self.displayedDate = d;
    NSLog(@"showMonthContainingDate: self.displayedDate = %@",self.displayedDate);
@@ -84,6 +113,7 @@
 }
 -(UILabel *)labelFromString:(NSString *)s
 {
+   NSLog(@"labelFromString");
    UILabel *returnLabel = [[UILabel alloc] init];
    returnLabel.text = s;
    returnLabel.font = [UIFont boldSystemFontOfSize:30];
@@ -92,15 +122,16 @@
 }
 -(void)showHeading
 {
+   NSLog(@"showHeading");
    //Separate heading into its components
    //28/293 year
-   UILabel *head1Label = [self labelFromString:[NSString stringWithFormat:@"Year: %ld",self.year]];
+   UILabel *head1Label = [self labelFromString:[NSString stringWithFormat:@"Year: %ld ",self.year]];
    head1Label.tag = 1001;
    //28/293 month
-   UILabel *head2Label = [self labelFromString:[NSString stringWithFormat:@"Month: %d",self.month]];
+   UILabel *head2Label = [self labelFromString:[NSString stringWithFormat:@"Month: %d ",self.month]];
    head2Label.tag = 1002;
    //28/293 accumulator
-   UILabel *head3Label = [self labelFromString:[NSString stringWithFormat:@"Acc.: %d",self.accumulator]];
+   UILabel *head3Label = [self labelFromString:[NSString stringWithFormat:@"Acc.: %d ",self.accumulator]];
    head3Label.tag = 1003;
    //Grogorian year
    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -115,11 +146,11 @@
    headingView.frame = CGRectMake(0, 0, head1Label.frame.size.width+head2Label.frame.size.width+head3Label.frame.size.width+head4Label.frame.size.width, head1Label.frame.size.height);
    float posX = 0.0;
    head1Label.frame = CGRectMake(0.0, 0.0, head1Label.bounds.size.width, head1Label.bounds.size.height);
-   posX = posX + head1Label.frame.size.width;
+   posX = posX + head1Label.frame.size.width * 1.125;//Add a little margin
    head2Label.frame = CGRectMake(posX, 0.0, head2Label.bounds.size.width, head2Label.bounds.size.height);
-   posX = posX + head2Label.frame.size.width;
+   posX = posX + head2Label.frame.size.width * 1.125;
    head3Label.frame = CGRectMake(posX, 0.0, head3Label.bounds.size.width, head3Label.bounds.size.height);
-   posX = posX + head3Label.frame.size.width;
+   posX = posX + head3Label.frame.size.width * 1.125;
    head4Label.frame = CGRectMake(posX, 0.0, head4Label.bounds.size.width, head4Label.bounds.size.height);
    
    [headingView addSubview:head1Label];
@@ -137,6 +168,7 @@
 }
 -(void)viewWillLayoutSubviews
 {
+   NSLog(@"viewWillLayoutSubview");
    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
       //iPhone code goes here
    } else  {
@@ -161,13 +193,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+   calPickerData = [[NSMutableArray alloc] initWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12", nil];
    NSDate *dayToDisplay = [NSDate date];
    self.displayedDate = dayToDisplay;
 }
 - (IBAction)swipeIphone:(UISwipeGestureRecognizer *)sender {
+   NSLog(@"swipeIphone");
    [self swipe:sender];
 }
 - (IBAction)swipe:(UISwipeGestureRecognizer *)sender {
+   NSLog(@"swipe");
    //swipe right
    if (sender.direction == UISwipeGestureRecognizerDirectionRight) {
       self.displayedDate = [NSDate dateWithTimeInterval:-28*86400 sinceDate:self.displayedDate];
@@ -175,6 +210,7 @@
    }
 }
 - (IBAction)swipeLeftIphone:(UISwipeGestureRecognizer *)sender {
+   NSLog(@"swipeLeftIphone");
    [self swipeLeft:sender];
    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
       //iPhone code goes here
@@ -183,6 +219,7 @@
    }
 }
 - (IBAction)swipeLeft:(UISwipeGestureRecognizer *)sender {
+   NSLog(@"swipeLeft");
    if (sender.direction == UISwipeGestureRecognizerDirectionLeft) {
       //Calculate the new date to display by adding number of days in the current month to the displayed date.
       self.displayedDate = [NSDate dateWithTimeInterval:(self.lastDayOfMonth+1)*86400 sinceDate:self.displayedDate];
@@ -190,6 +227,7 @@
    }
 }
 -(CGPoint) getDayCellDimensions {
+   NSLog(@"getDayCellDimensions");
    float dayWidth, dayHeight;     //Calculate size of day cells based on screen size and orientation.
    if(UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
       //do portrait work
@@ -206,6 +244,7 @@
 
 -(void)displayMonthContainingDate:(long)date day:(int)d month:(int)m year:(long)year dow:(int)dow acc:(int)acc gregDate:(NSDate *)dayToDisplay
 {
+   NSLog(@"displayMonthContainingDate:day:month:year:dow:acc:gregDate:");
    //Display the month in the 28/293 calendar containing date dayToDisplay.
    
    //Explanation of the arguments.
@@ -219,12 +258,6 @@
     jdayToDisplay date object containing the date being displayed.
     */
 
-   //Following lines are an attempt to figure out UIDatePicker.
-   //UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 216, 320, 216)];
-   //[datePicker setDate:[NSDate date]];  //This is the default
-   //[datePicker setHidden:NO];
-   //[self.view addSubview:datePicker];
-   
    long offset = 0;               //offset is the number of days prior to date represented by startOfWeek.
    long sequentialDayNumber ;
    int startOfWeek = d - dow;     //Find the start of the week containing dayToDisplay.
@@ -270,9 +303,37 @@
       startOfWeek += 7;
    } while (startOfWeek < 29);
 }
+//Month picker
+-(void)selectAMonth: (CGPoint)p
+{
+   NSLog(@"selectAMonth");
+   if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+      calPickerView.delegate = self;
+      calPickerView.dataSource = self;
+      calPickerView.showsSelectionIndicator = YES;
+      [self.view addSubview:calPickerView];
+   } else  {
+      UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
+      UIView *popoverView = [[UIView alloc] init];   //view
+      popoverView.backgroundColor = [UIColor blackColor];
+      [popoverView addSubview:calPickerView];
+      calPickerView = [[UIPickerView alloc] init];
+      calPickerView.delegate = self;
+      calPickerView.dataSource = self;
+      calPickerView.showsSelectionIndicator = YES;
+      popoverContent.view = popoverView;
+      UIPopoverController * popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+      self.datePopover = popoverController;
+      [popoverController setPopoverContentSize:CGSizeMake(320, 264) animated:NO];
+      CGRect popoverLocation = CGRectMake(p.x-160, p.y-200, 320, 216);
+      [popoverController presentPopoverFromRect:popoverLocation inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];//tempButton.frame where you need you can put that frame//
+   }
+
+}
 //Date picker in popover
 -(void)selectADate: (CGPoint)p
 {
+   NSLog(@"selectADate");
    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
    datePicker.frame=CGRectMake(0,44,320, 216);
    datePicker.datePickerMode = UIDatePickerModeDate;
@@ -280,23 +341,7 @@
    datePicker.date = self.displayedDate;
    [datePicker addTarget:self action:@selector(pickerChanged:) forControlEvents:UIControlEventValueChanged];
    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-      //iPhone code goes here
-      //datePicker.center = self.view.center;
-      //[datePicker setEnabled:YES];
-      //[datePicker setHidden:NO];
-      //[self.view.superview addSubview:datePicker];
-      //Line below this comment does not work. Line above does, but then the datePicker is one layer too high and does not rotate
-      //with orientation change.
       [self.view addSubview:datePicker];
-      NSLog(@"***************");
-      NSLog(@"%@",self.view);
-      NSLog(@"***************");
-      NSLog(@"%@",self.view.superview);
-      NSLog(@"***************");
-      //[self.view bringSubviewToFront:datePicker];
-      //[datePicker setNeedsDisplay];
-      //[datePicker setUserInteractionEnabled:YES];
-      NSLog(@"datePicker frame is %@",NSStringFromCGRect(datePicker.frame));
    } else  {
       UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
       UIView *popoverView = [[UIView alloc] init];   //view
@@ -311,6 +356,7 @@
    }
 }
 - (IBAction)tap:(UITapGestureRecognizer *)sender {
+   NSLog(@"tap:");
    //First check if a date picker is on screen, in which case dismiss it if tap is outside of date picker
    for (UIDatePicker *datePicker in self.view.superview.subviews) {
       if (datePicker.tag == 10) {
@@ -322,6 +368,9 @@
    //tap gesture recognizer
    //Assume the user tapped on a day cell.
    BOOL tapRequestsDatePicker = NO;
+   BOOL tapRequestsYearPicker = NO;
+   BOOL tapRequestsMonthPicker = NO;
+   BOOL tapRequestsAccPicker = NO;
    for (UIView *dayCell in self.view.subviews) {
       if (CGRectContainsPoint(dayCell.frame, [sender locationInView:self.view])) {
          //found the cell that was touched.
@@ -337,20 +386,44 @@
       }
       //      if ([dayCell isKindOfClass:[UILabel class]]) {
       if (dayCell.tag == 1000) {
-         // This is the heading label.
-         UILabel * headingLabel = (UILabel *) dayCell;
-         if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:self.view])) {
-            NSLog(@"The heading was tapped");
-            tapRequestsDatePicker = YES;
+         // This is the heading label view.
+         // Now check which component of the heading was tapped.
+         for (UILabel *headingLabel in dayCell.subviews) {
+            if (headingLabel.tag == 1004) {
+               NSLog(@"head4 frame is %@",NSStringFromCGRect(headingLabel.frame));
+               if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:dayCell])) {
+                  NSLog(@"The heading was tapped");
+                  tapRequestsDatePicker = YES;
+               }
+            } else if (headingLabel.tag == 1001) {
+               if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:dayCell])) {
+                  NSLog(@"The 28/293 year was tapped");
+                  tapRequestsYearPicker = YES;
+               }
+            } else if (headingLabel.tag == 1002) {
+               if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:dayCell])) {
+                  NSLog(@"The 28/293 month was tapped");
+                  tapRequestsMonthPicker = YES;
+               }
+            } else if (headingLabel.tag == 1003) {
+               if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:dayCell])) {
+                  NSLog(@"The 28/293 accumulator was tapped");
+                  tapRequestsAccPicker = YES;
+               }
+            }
          }
       }
    }
    if (tapRequestsDatePicker) {
       [self selectADate:[sender locationInView:self.view]];
    }
+   if (tapRequestsMonthPicker) {
+      [self selectAMonth:[sender locationInView:self.view]];
+   }
 }
 - (void)pickerChanged:(id)sender
 {
+   NSLog(@"pickerChanged:");
    NSLog(@"value: %@",[sender date]);
    self.displayedDate = [sender date];
    NSLog(@"Updated date is %@",self.displayedDate);
@@ -359,7 +432,7 @@
 -(void)takedown
 {
    //remove displayed month
-   //NSLog(@"Takedown");
+   NSLog(@"Takedown");
    for (UIView *dayFrame in self.view.subviews) {
       //NSLog(@"   Takedown");
       for (UIView *dayCell in dayFrame.subviews) {
@@ -373,6 +446,7 @@
 }
 - (void)didReceiveMemoryWarning
 {
+   NSLog(@"didReceiveMemoryWarning");
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

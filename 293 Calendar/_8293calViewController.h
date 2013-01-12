@@ -9,5 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface _8293calViewController : UIViewController
-
+<UIPickerViewDataSource, UIPickerViewDelegate>
+{
+   UIPickerView *calPickerView;
+   NSMutableArray *calPickerData;
+}
+@property (nonatomic, retain) UIPickerView *pickerView;
+@property (nonatomic, retain) NSMutableArray *pickerData;
+//-(IBAction)PickerView:(id)sender;
 @end
