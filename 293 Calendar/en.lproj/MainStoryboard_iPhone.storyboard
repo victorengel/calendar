@@ -33,12 +33,25 @@
                 </swipeGestureRecognizer>
                 <tapGestureRecognizer id="53n-VW-fVF">
                     <connections>
-                        <action selector="tap:" destination="2" id="Q51-To-ULf"/>
+                        <action selector="tap:" destination="2" id="1op-Qe-tyH"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
         </scene>
     </scenes>
+    <classes>
+        <class className="_8293calViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/_8293calViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="swipe:" candidateClass="UISwipeGestureRecognizer"/>
+                <relationship kind="action" name="swipeIphone:" candidateClass="UISwipeGestureRecognizer"/>
+                <relationship kind="action" name="swipeLeft:" candidateClass="UISwipeGestureRecognizer"/>
+                <relationship kind="action" name="swipeLeftIphone:" candidateClass="UISwipeGestureRecognizer"/>
+                <relationship kind="action" name="tap:" candidateClass="UITapGestureRecognizer"/>
+                <relationship kind="action" name="tapIphone:" candidateClass="UITapGestureRecognizer"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
