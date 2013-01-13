@@ -112,7 +112,7 @@
 }
 -(UILabel *)labelFromString:(NSString *)s
 {
-   NSLog(@"labelFromString");
+   //NSLog(@"labelFromString");
    UILabel *returnLabel = [[UILabel alloc] init];
    returnLabel.text = s;
    returnLabel.font = [UIFont boldSystemFontOfSize:30];
@@ -192,7 +192,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-   calPickerData = [[NSMutableArray alloc] initWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12", nil];
+   calPickerData = [[NSMutableArray alloc] initWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12", nil];
    NSDate *dayToDisplay = [NSDate date];
    self.displayedDate = dayToDisplay;
 }
@@ -222,6 +222,33 @@
    if (sender.direction == UISwipeGestureRecognizerDirectionLeft) {
       //Calculate the new date to display by adding number of days in the current month to the displayed date.
       self.displayedDate = [NSDate dateWithTimeInterval:(self.lastDayOfMonth+1)*86400 sinceDate:self.displayedDate];
+      [self showMonthContainingDate:self.displayedDate];
+   }
+}
+- (IBAction)swipeUp:(UISwipeGestureRecognizer *)sender {
+   if (sender.direction == UISwipeGestureRecognizerDirectionUp) {
+      //Calculate the new date to display by adding number of days in the current month to the displayed date.
+      int daysInYear = 365;
+      int revAcc = (293+27-self.accumulator)%293;
+      if (revAcc < 71) {
+         daysInYear = 366;
+      }
+      NSLog(@"########## %d %d %d ##########",self.accumulator, revAcc, daysInYear);
+      self.displayedDate = [NSDate dateWithTimeInterval:daysInYear*86400 sinceDate:self.displayedDate];
+      [self showMonthContainingDate:self.displayedDate];
+   }
+}
+- (IBAction)swipeDown:(UISwipeGestureRecognizer *)sender {
+   if (sender.direction == UISwipeGestureRecognizerDirectionDown) {
+      //Calculate the new date to display by adding number of days in the current month to the displayed date.
+      int daysInYear = -365;
+      int revAcc = (self.accumulator-28);
+      if (revAcc<0) revAcc += 293;
+      if (revAcc < 71) {
+         daysInYear = -366;
+      }
+      NSLog(@"########## %d %d %d ##########",self.accumulator, revAcc, daysInYear);
+      self.displayedDate = [NSDate dateWithTimeInterval:daysInYear*86400 sinceDate:self.displayedDate];
       [self showMonthContainingDate:self.displayedDate];
    }
 }
@@ -320,6 +347,7 @@
       calPickerView.delegate = self;
       calPickerView.dataSource = self;
       calPickerView.showsSelectionIndicator = YES;
+      [calPickerView reloadAllComponents];
       popoverContent.view = popoverView;
       UIPopoverController * popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
       self.datePopover = popoverController;

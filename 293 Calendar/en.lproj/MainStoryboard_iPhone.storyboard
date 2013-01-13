@@ -17,6 +17,7 @@
                             <outletCollection property="gestureRecognizers" destination="Ubt-e2-dxS" appends="YES" id="wV0-hS-gnB"/>
                             <outletCollection property="gestureRecognizers" destination="IWA-aW-jMW" appends="YES" id="61h-J1-dQF"/>
                             <outletCollection property="gestureRecognizers" destination="53n-VW-fVF" appends="YES" id="7G8-PO-VXL"/>
+                            <outletCollection property="gestureRecognizers" destination="NjK-NS-SSr" appends="YES" id="Lhy-Zk-1P1"/>
                         </connections>
                     </view>
                 </viewController>
@@ -36,22 +37,19 @@
                         <action selector="tap:" destination="2" id="1op-Qe-tyH"/>
                     </connections>
                 </tapGestureRecognizer>
+                <swipeGestureRecognizer direction="up" id="NjK-NS-SSr">
+                    <connections>
+                        <action selector="swipeUp:" destination="2" id="FjB-Qs-fQ4"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="down" id="ehq-hl-ghS">
+                    <connections>
+                        <action selector="swipeDown:" destination="2" id="fUw-01-hS8"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
         </scene>
     </scenes>
-    <classes>
-        <class className="_8293calViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/_8293calViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="swipe:" candidateClass="UISwipeGestureRecognizer"/>
-                <relationship kind="action" name="swipeIphone:" candidateClass="UISwipeGestureRecognizer"/>
-                <relationship kind="action" name="swipeLeft:" candidateClass="UISwipeGestureRecognizer"/>
-                <relationship kind="action" name="swipeLeftIphone:" candidateClass="UISwipeGestureRecognizer"/>
-                <relationship kind="action" name="tap:" candidateClass="UITapGestureRecognizer"/>
-                <relationship kind="action" name="tapIphone:" candidateClass="UITapGestureRecognizer"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
