@@ -19,6 +19,7 @@
 @property int lastDayOfMonth;                //number of days in the displayed month
 @property int accumulator;                   //accumulator for the displayed month
 @property (strong, nonatomic) UIPopoverController* datePopover;
+//@property (nonatomic, retain) UIPickerView* calendarPickerView;
 
 @end
 
@@ -31,25 +32,159 @@
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
    NSLog(@"pickerView:numberOfRowsInComponent:");
-   return [calPickerData count]; //hard code for now -- will need to calculate per component eventually.
+   if (component==0) {
+      return [calPickerYearData count]; //hard code for now -- will need to calculate per component eventually.
+   }
+   if (component==1) {
+      return [calPickerMonthData count];
+   }
+   if (component==2) {
+      return [calPickerAccData count];
+   }
+   return 0;
 }
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
    NSLog(@"numberOfComponentsInPickerView:");
-   return 1; //start out with a 1 component picker for now.
+   return 3; //start out with a 1 component picker for now.
 }
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
    NSLog(@"pickerView:didSelectRow:inComponent:");
    //
-   NSString *selectedItem = [NSString stringWithFormat:@"%@",[calPickerData objectAtIndex:[calPickerView selectedRowInComponent:0]]];
+   NSString *selectedItem;
+   if (component==0) {
+      //Parse out the year from the selected item
+      selectedItem = [NSString stringWithFormat:@"%@",[calPickerYearData objectAtIndex:[calPickerView selectedRowInComponent:component]]];
+      // We now have a new 28/293 year. Calculate the new date from it.
+      long newYear = [selectedItem longLongValue];
+      if (newYear > self.year) {
+         long elapsedYears = newYear - self.year;
+         NSLog(@"Elapsed years: %ld",elapsedYears);
+         int acc = self.accumulator;
+         long daysForward = 0;
+         for (long i=1; i<=elapsedYears; i++) {
+            daysForward += 365;
+            NSLog(@"Forward by %ld years = %ld days",i,daysForward);
+            acc += 71;
+            if (acc >=293) {
+               acc -= 293;
+               daysForward += 1;
+               NSLog(@"Because of acc: %d there is a leap day %ld",acc,daysForward);
+            }
+         }
+         double secondsForward = daysForward * 86400.0;
+         NSLog(@"Seconds forward is %f",secondsForward);
+         NSLog(@"Fast forward that many seconds from %@",self.displayedDate);
+         NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
+         NSLog(@"New year is calculated to be %@",newDate);
+         [self showMonthContainingDate:newDate];
+      }
+   }
+   if (component==1) {
+      selectedItem = [NSString stringWithFormat:@"%@",[calPickerMonthData objectAtIndex:[calPickerView selectedRowInComponent:component]]];
+      //Parse out the month from the selected item
+      // We now have a new 28/293 month. Calculate the new date from it.
+      int newMonth = [selectedItem intValue];
+      // Always go forward.
+      if (newMonth < self.month) newMonth += 13;
+      if (newMonth > self.month) {
+         int elapsedMonths = newMonth - self.month;
+         int acc = self.accumulator;
+         long daysForward = 0;
+         for (long i=1; i<=elapsedMonths; i++) {
+            daysForward += 28;
+            acc += 28;
+            if (acc >=293) {
+               acc -= 293;
+               daysForward += 1;
+            }
+         }
+         double secondsForward = daysForward * 86400.0;
+         NSLog(@"Seconds forward is %f",secondsForward);
+         NSLog(@"Fast forward that many seconds from %@",self.displayedDate);
+         NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
+         NSLog(@"New year is calculated to be %@",newDate);
+         [self showMonthContainingDate:newDate];
+      }
+   }
+   if (component==2) {
+      selectedItem = [NSString stringWithFormat:@"%@",[calPickerAccData objectAtIndex:[calPickerView selectedRowInComponent:component]]];
+   }
    NSLog(@"Selected item: %@",selectedItem);
+   long selectedRow = [pickerView selectedRowInComponent:component];
+   NSLog(@"dsr SelectedRow is %ld",selectedRow);
+   NSString *selectedValue = [calPickerYearData objectAtIndex:selectedRow];
+   NSLog(@"dsr Selected value is %@>>>>>>>>",selectedValue);
    //
 }
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-   NSLog(@"pickerView:titleForRow:forComponent:");
-   return [calPickerData objectAtIndex:row];
+   NSLog(@"pickerView:titleForRow:%d forComponent:%d",row,component);
+   /*
+    [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",self.year+i]];
+    [calPickerMonthData addObject:[NSString stringWithFormat:@"%d",self.month+i]];
+    thisAccumulator = self.accumulator + i;
+    if (thisAccumulator<0) thisAccumulator += 293;
+    if (thisAccumulator>=293) thisAccumulator -= 293;
+    [calPickerAccData addObject:[NSString stringWithFormat:@"%d",thisAccumulator]];
+    */
+   if (component==0) {
+      long selectedRow = [pickerView selectedRowInComponent:component];
+      NSLog(@"SelectedRow is %ld",selectedRow);
+      NSString *selectedValue = [calPickerYearData objectAtIndex:selectedRow];
+      NSLog(@"Selected value is %@>>>>>>>>",selectedValue);
+      //return [calPickerYearData objectAtIndex:row];
+      //po calPickerYearData
+      NSString *selectedYearString = [calPickerYearData objectAtIndex:row];
+      if (row > [calPickerYearData count]-3) {
+         //nearing the end of the array. Add more values.
+         //long selectedRowOffset = selectedRow - row;
+         long selectedYear = [[calPickerYearData objectAtIndex:[calPickerYearData count]-1] longLongValue];
+         //[calPickerYearData removeAllObjects];
+         for (int i=0; i<=10; i++) {
+            [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",selectedYear+i+1]];
+         }
+         //[calPickerView selectRow:5+selectedRowOffset inComponent:component animated:NO];
+         [calPickerView reloadAllComponents];
+      }
+/*      if (row>[calPickerYearData count]-5) {
+         //nearing the end of the array. Add more values.
+         long selectedRowOffset = selectedRow - row;
+         long selectedYear = [selectedValue longLongValue];
+         [calPickerYearData removeAllObjects];
+         for (int i=-5; i<=5; i++) {
+            [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",selectedYear+i]];
+         }
+         [calPickerView selectRow:5+selectedRowOffset inComponent:component animated:NO];
+         [calPickerView reloadAllComponents];
+      }*/
+      /*if (selectedRow > 0) {
+         if (row == selectedRow) {
+            if (row != 0) {
+               //Reload the array so that the selected row is on line 5.
+               long selectedYear = [selectedYearString longLongValue];
+               //Update the array
+               [calPickerYearData removeAllObjects];
+               for (int i=-5; i<=5; i++) {
+                  [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",selectedYear+i]];
+               }
+               row = 5;
+               //po calPickerYearData
+               [pickerView selectRow:row inComponent:component animated:NO];
+               //[calPickerView reloadAllComponents];
+            }
+         }
+      }*/
+      return selectedYearString;
+   }
+   if (component==1) {
+      return [calPickerMonthData objectAtIndex:row];
+   }
+   if (component==2) {
+      return [calPickerAccData objectAtIndex:row];
+   }
+   return @"";
    NSLog(@"pickerView:titleForRow:");
 }
 -(NSDate *)epoch {
@@ -108,7 +243,30 @@
    self.month = month;
    self.day = day;
    self.accumulator = acc;
+   [self updatePickerArrays];
+   [calPickerView reloadAllComponents];
    [self showHeading];
+}
+-(void)updatePickerArrays
+{
+   //Populate the picker arrays from the current values for the displayed month
+   [calPickerYearData removeAllObjects];
+   [calPickerMonthData removeAllObjects];
+   [calPickerAccData removeAllObjects];
+   int thisAccumulator;
+   int thisMonth;
+   for (int i=-1209; i<=1209; i++) {
+      [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",self.year+i]];
+      thisMonth = self.month + i;
+      while (thisMonth<0) thisMonth += 13;
+      thisMonth = thisMonth % 13;
+      [calPickerMonthData addObject:[NSString stringWithFormat:@"%d",thisMonth]];
+      thisAccumulator = self.accumulator + i;
+      while (thisAccumulator<0) thisAccumulator += 293;
+      thisAccumulator = thisAccumulator % 293;
+      //if (thisAccumulator>=293) thisAccumulator -= 293;
+      [calPickerAccData addObject:[NSString stringWithFormat:@"%d",thisAccumulator]];
+   }
 }
 -(UILabel *)labelFromString:(NSString *)s
 {
@@ -192,7 +350,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-   calPickerData = [[NSMutableArray alloc] initWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12", nil];
+   //Start with nil arrays. Intialize them when the month is displayed.
+   calPickerYearData = [[NSMutableArray alloc] initWithObjects: nil];
+   calPickerMonthData = [[NSMutableArray alloc] initWithObjects: nil];
+   calPickerAccData = [[NSMutableArray alloc]initWithObjects: nil];
    NSDate *dayToDisplay = [NSDate date];
    self.displayedDate = dayToDisplay;
 }
@@ -342,12 +503,15 @@
       UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
       UIView *popoverView = [[UIView alloc] init];   //view
       popoverView.backgroundColor = [UIColor blackColor];
-      [popoverView addSubview:calPickerView];
       calPickerView = [[UIPickerView alloc] init];
       calPickerView.delegate = self;
       calPickerView.dataSource = self;
       calPickerView.showsSelectionIndicator = YES;
       [calPickerView reloadAllComponents];
+      [calPickerView selectRow:1209 inComponent:0 animated:NO];
+      [calPickerView selectRow:1209 inComponent:1 animated:NO];
+      [calPickerView selectRow:1209 inComponent:2 animated:NO];
+      [popoverView addSubview:calPickerView];
       popoverContent.view = popoverView;
       UIPopoverController * popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
       self.datePopover = popoverController;

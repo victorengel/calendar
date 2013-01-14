@@ -12,7 +12,9 @@
 <UIPickerViewDataSource, UIPickerViewDelegate>
 {
    UIPickerView *calPickerView;
-   NSMutableArray *calPickerData;
+   NSMutableArray *calPickerYearData;
+   NSMutableArray *calPickerMonthData;
+   NSMutableArray *calPickerAccData;
 }
 @property (nonatomic, retain) UIPickerView *pickerView;
 @property (nonatomic, retain) NSMutableArray *pickerData;
