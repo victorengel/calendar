@@ -638,13 +638,51 @@
                      //Only one item in this loop will get here since the month is tiled with views with tag 1.
                      NSLog(@"Found a subview %@",dayElement.text);
                      int daySelected = [dayElement.text intValue];
-                     int daysForward = daySelected - self.day;
-                     double secondsForward = 86400*daysForward;
-                     NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
-                     NSLog(@"New date is calculated to be %@",newDate);
-                     self.displayedDate = newDate;
-                     [self showMonthContainingDate:newDate];
-                     return; //If a day cell was tapped, then a picker was not selected nor was the header tapped, so return.
+                     long daysForward = daySelected - self.day;
+                     if (daysForward == 0) {
+                        //User tapped date already selected as current date. In this case, let's find the first special day for this month
+                        //and day combination.
+                        //int monthNumber = self.month;
+                        NSLog(@"Tapped currently selected day. Find associated special day.");
+                        int dayNumber = self.day;
+                        NSLog(@"Day number is %d",dayNumber);
+                        int thisAcc = self.accumulator;
+                        //int daysToEndOfMonth = 12;
+                        int targetAccumulator = 28 - dayNumber; // the "special" anniversary is on a special day, all months containing
+                                                                // a special day have a day 28.
+                        NSLog(@"Target accumulator is %d",targetAccumulator);
+                        //Make an adjustment depending on whether the special day is before or after the target day in the current month.
+                        if (thisAcc<28) {
+                           if (targetAccumulator > thisAcc) {
+                              daysForward += 1;
+                              NSLog(@"Starting month has a special day after target day, so add one day %ld",daysForward);
+                           }
+                        }
+                        while (targetAccumulator != thisAcc) {
+                           thisAcc += 71;
+                           daysForward += 365;
+                           NSLog(@"Jumping 365 days to new accumulator: %d, days forward: %ld",thisAcc, daysForward);
+                           if (thisAcc >= 293) {
+                              daysForward++;
+                              NSLog(@"Leap day %ld",daysForward);
+                              thisAcc -= 293;
+                           }
+                        }
+                        daysForward--; //Since the day we're landing on is the special day, we don't need to add an extra day for it.
+                        double secondsForward = 86400.0*daysForward;
+                        NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
+                        NSLog(@"New date is calculated to be %@",newDate);
+                        self.displayedDate = newDate;
+                        [self showMonthContainingDate:newDate];
+                        return; //If a day cell was tapped, then a picker was not selected nor was the header tapped, so return.
+                     } else {
+                        double secondsForward = 86400*daysForward;
+                        NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
+                        NSLog(@"New date is calculated to be %@",newDate);
+                        self.displayedDate = newDate;
+                        [self showMonthContainingDate:newDate];
+                        return; //If a day cell was tapped, then a picker was not selected nor was the header tapped, so return.
+                     }
                   }
                }
             }
