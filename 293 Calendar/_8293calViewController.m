@@ -653,10 +653,7 @@
                         NSLog(@"Target accumulator is %d",targetAccumulator);
                         //Make an adjustment depending on whether the special day is before or after the target day in the current month.
                         if (thisAcc<28) {
-                           if (targetAccumulator > thisAcc) {
                               daysForward += 1;
-                              NSLog(@"Starting month has a special day after target day, so add one day %ld",daysForward);
-                           }
                         }
                         while (targetAccumulator != thisAcc) {
                            thisAcc += 71;
