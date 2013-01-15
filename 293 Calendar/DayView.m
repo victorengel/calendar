@@ -33,6 +33,7 @@
       [dateFormat setDateFormat:@"MM-dd "];
       UILabel *dayNumber = [[UILabel alloc] init];
       dayNumber.text = [NSString stringWithFormat:@" %2d",d];
+      dayNumber.tag = 1;//Identify the view containing the day number with tag 1.
       //NSLog(@"Width is %f",w);
       dayNumber.font = [UIFont boldSystemFontOfSize:w/8];
       dayNumber.frame = CGRectMake(0,0,w/2,h/5);
@@ -41,6 +42,7 @@
       dayNumber.backgroundColor = [UIColor clearColor];
       UILabel *gregDate = [[UILabel alloc] init];
       gregDate.text = [dateFormat stringFromDate:date];
+      gregDate.tag = 2;//Identify the view containing the Gregorian MM-DD with tag 2.
       //if (gregDate.text == @"01-01 ") {
       if ([gregDate.text rangeOfString:@"01-01"].location==0) {
          notation = @"G:New Year";
@@ -108,6 +110,7 @@
       if (notation != @"") {
          UILabel *notationLabel = [[UILabel alloc] init];
          notationLabel.text = notation;
+         notationLabel.tag = 3;//Identify the view containing textual information with tag 3.
          notationLabel.font = [UIFont systemFontOfSize:w/9];
          [notationLabel sizeToFit];
          notationLabel.center = dayToReturn.center;

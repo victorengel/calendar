@@ -79,6 +79,28 @@
          NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
          NSLog(@"New year is calculated to be %@",newDate);
          [self showMonthContainingDate:newDate];
+      } else if (newYear < self.year)
+      {
+         long elapsedYears = self.year - newYear;
+         NSLog(@"Elapsed years: %ld",elapsedYears);
+         int acc = self.accumulator;
+         long daysBackward = 0;
+         for (long i=1; i<=elapsedYears; i++) {
+            daysBackward += 365;
+            NSLog(@"Forward by %ld years = %ld days",i,daysBackward);
+            acc -= 71;
+            if (acc < 0) {
+               acc += 293;
+               daysBackward += 1;
+               NSLog(@"Because of acc: %d there is a leap day %ld",acc,daysBackward);
+            }
+         }
+         double secondsForward = -1.0 * daysBackward * 86400.0;
+         NSLog(@"Seconds forward is %f",secondsForward);
+         NSLog(@"Fast forward that many seconds from %@",self.displayedDate);
+         NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
+         NSLog(@"New year is calculated to be %@",newDate);
+         [self showMonthContainingDate:newDate];
       }
    }
    if (component==1) {
@@ -110,6 +132,29 @@
    }
    if (component==2) {
       selectedItem = [NSString stringWithFormat:@"%@",[calPickerAccData objectAtIndex:[calPickerView selectedRowInComponent:component]]];
+      //Parse out the month from the selected item
+      // We now have a new 28/293 month. Calculate the new date from it.
+      int newAcc = [selectedItem intValue];
+      // Always go forward.
+      if (newAcc != self.accumulator) {
+         //Move forward a year at a time until the target accumulator is found.
+         int acc = self.accumulator;
+         long daysForward = 0;
+         do {
+            acc = acc+28;
+            daysForward += 28;
+            if (acc >=293) {
+               acc -= 293;
+               daysForward += 1;
+            }
+         } while (newAcc != acc);
+         double secondsForward = daysForward * 86400.0;
+         NSLog(@"Seconds forward is %f",secondsForward);
+         NSLog(@"Fast forward that many seconds from %@",self.displayedDate);
+         NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
+         NSLog(@"New year is calculated to be %@",newDate);
+         [self showMonthContainingDate:newDate];
+      }
    }
    NSLog(@"Selected item: %@",selectedItem);
    long selectedRow = [pickerView selectedRowInComponent:component];
@@ -267,6 +312,9 @@
       //if (thisAccumulator>=293) thisAccumulator -= 293;
       [calPickerAccData addObject:[NSString stringWithFormat:@"%d",thisAccumulator]];
    }
+   [calPickerView selectRow:1209 inComponent:0 animated:NO];
+   [calPickerView selectRow:1209 inComponent:1 animated:NO];
+   [calPickerView selectRow:1209 inComponent:2 animated:NO];
 }
 -(UILabel *)labelFromString:(NSString *)s
 {
@@ -493,11 +541,26 @@
 //Month picker
 -(void)selectAMonth: (CGPoint)p
 {
+   /*Top of selectaDate:
+    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
+    datePicker.frame=CGRectMake(0,44,320, 216);
+    datePicker.datePickerMode = UIDatePickerModeDate;
+    [datePicker setTag:10];
+    datePicker.date = self.displayedDate;
+    [datePicker addTarget:self action:@selector(pickerChanged:) forControlEvents:UIControlEventValueChanged];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+    [self.view addSubview:datePicker];
+    */
    NSLog(@"selectAMonth");
    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+      calPickerView = [[UIPickerView alloc] init];
       calPickerView.delegate = self;
       calPickerView.dataSource = self;
       calPickerView.showsSelectionIndicator = YES;
+      [calPickerView reloadAllComponents];
+      [calPickerView selectRow:1209 inComponent:0 animated:NO];
+      [calPickerView selectRow:1209 inComponent:1 animated:NO];
+      [calPickerView selectRow:1209 inComponent:2 animated:NO];
       [self.view addSubview:calPickerView];
    } else  {
       UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
@@ -511,6 +574,7 @@
       [calPickerView selectRow:1209 inComponent:0 animated:NO];
       [calPickerView selectRow:1209 inComponent:1 animated:NO];
       [calPickerView selectRow:1209 inComponent:2 animated:NO];
+      NSLog(@"Row selected programmatically");
       [popoverView addSubview:calPickerView];
       popoverContent.view = popoverView;
       UIPopoverController * popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
@@ -570,7 +634,18 @@
             for (UILabel *dayElement in insideView.subviews) {
                //found a subview of the day cell.
                if ([dayElement isKindOfClass:[UILabel class]]) {
-                  NSLog(@"Found a subview %@",dayElement.text);
+                  if (dayElement.tag == 1) {
+                     //Only one item in this loop will get here since the month is tiled with views with tag 1.
+                     NSLog(@"Found a subview %@",dayElement.text);
+                     int daySelected = [dayElement.text intValue];
+                     int daysForward = daySelected - self.day;
+                     double secondsForward = 86400*daysForward;
+                     NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
+                     NSLog(@"New date is calculated to be %@",newDate);
+                     self.displayedDate = newDate;
+                     [self showMonthContainingDate:newDate];
+                     return; //If a day cell was tapped, then a picker was not selected nor was the header tapped, so return.
+                  }
                }
             }
          }
@@ -608,7 +683,7 @@
    if (tapRequestsDatePicker) {
       [self selectADate:[sender locationInView:self.view]];
    }
-   if (tapRequestsMonthPicker) {
+   if (tapRequestsMonthPicker||tapRequestsYearPicker||tapRequestsAccPicker) {
       [self selectAMonth:[sender locationInView:self.view]];
    }
 }
