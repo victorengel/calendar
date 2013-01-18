@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		A75337A7169E1CE4000D88FF /* DayView.m in Sources */ = {isa = PBXBuildFile; fileRef = A75337A6169E1CE4000D88FF /* DayView.m */; };
+		A784042E16A7403E0055CC66 /* From 283 Javascript in Resources */ = {isa = PBXBuildFile; fileRef = A784042D16A7403E0055CC66 /* From 283 Javascript */; };
+		A784043716A74FA30055CC66 /* 293.png in Resources */ = {isa = PBXBuildFile; fileRef = A784043016A74FA30055CC66 /* 293.png */; };
+		A784043816A74FA30055CC66 /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = A784043116A74FA30055CC66 /* icon-72.png */; };
+		A784043916A74FA30055CC66 /* icon-small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = A784043216A74FA30055CC66 /* icon-small-50.png */; };
+		A784043A16A74FA30055CC66 /* icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = A784043316A74FA30055CC66 /* icon-small.png */; };
+		A784043B16A74FA30055CC66 /* icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A784043416A74FA30055CC66 /* icon-small@2x.png */; };
+		A784043C16A74FA30055CC66 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A784043516A74FA30055CC66 /* icon.png */; };
+		A784043D16A74FA30055CC66 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A784043616A74FA30055CC66 /* icon@2x.png */; };
 		A7A81D7C16960356005F85B3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7A81D7B16960356005F85B3 /* UIKit.framework */; };
 		A7A81D7E16960356005F85B3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7A81D7D16960356005F85B3 /* Foundation.framework */; };
 		A7A81D8016960356005F85B3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7A81D7F16960356005F85B3 /* CoreGraphics.framework */; };
@@ -25,6 +33,14 @@
 /* Begin PBXFileReference section */
 		A75337A5169E1CE4000D88FF /* DayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayView.h; sourceTree = "<group>"; };
 		A75337A6169E1CE4000D88FF /* DayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayView.m; sourceTree = "<group>"; };
+		A784042D16A7403E0055CC66 /* From 283 Javascript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "From 283 Javascript"; sourceTree = "<group>"; };
+		A784043016A74FA30055CC66 /* 293.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 293.png; sourceTree = "<group>"; };
+		A784043116A74FA30055CC66 /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72.png"; sourceTree = "<group>"; };
+		A784043216A74FA30055CC66 /* icon-small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small-50.png"; sourceTree = "<group>"; };
+		A784043316A74FA30055CC66 /* icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small.png"; sourceTree = "<group>"; };
+		A784043416A74FA30055CC66 /* icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small@2x.png"; sourceTree = "<group>"; };
+		A784043516A74FA30055CC66 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		A784043616A74FA30055CC66 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		A7A81D7716960356005F85B3 /* 293 Calendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "293 Calendar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7A81D7B16960356005F85B3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A7A81D7D16960356005F85B3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -94,6 +110,7 @@
 				A7A81D9616960356005F85B3 /* MainStoryboard_iPad.storyboard */,
 				A7A81D9916960356005F85B3 /* _8293calViewController.h */,
 				A7A81D9A16960356005F85B3 /* _8293calViewController.m */,
+				A784042D16A7403E0055CC66 /* From 283 Javascript */,
 				A75337A5169E1CE4000D88FF /* DayView.h */,
 				A75337A6169E1CE4000D88FF /* DayView.m */,
 				A7A81D8216960356005F85B3 /* Supporting Files */,
@@ -107,6 +124,13 @@
 				A7A81D8316960356005F85B3 /* 293 Calendar-Info.plist */,
 				A7A81D8416960356005F85B3 /* InfoPlist.strings */,
 				A7A81D8716960356005F85B3 /* main.m */,
+				A784043016A74FA30055CC66 /* 293.png */,
+				A784043116A74FA30055CC66 /* icon-72.png */,
+				A784043216A74FA30055CC66 /* icon-small-50.png */,
+				A784043316A74FA30055CC66 /* icon-small.png */,
+				A784043416A74FA30055CC66 /* icon-small@2x.png */,
+				A784043516A74FA30055CC66 /* icon.png */,
+				A784043616A74FA30055CC66 /* icon@2x.png */,
 				A7A81D8916960356005F85B3 /* 293 Calendar-Prefix.pch */,
 				A7A81D8D16960356005F85B3 /* Default.png */,
 				A7A81D8F16960356005F85B3 /* Default@2x.png */,
@@ -173,6 +197,14 @@
 				A7A81D9216960356005F85B3 /* Default-568h@2x.png in Resources */,
 				A7A81D9516960356005F85B3 /* MainStoryboard_iPhone.storyboard in Resources */,
 				A7A81D9816960356005F85B3 /* MainStoryboard_iPad.storyboard in Resources */,
+				A784042E16A7403E0055CC66 /* From 283 Javascript in Resources */,
+				A784043716A74FA30055CC66 /* 293.png in Resources */,
+				A784043816A74FA30055CC66 /* icon-72.png in Resources */,
+				A784043916A74FA30055CC66 /* icon-small-50.png in Resources */,
+				A784043A16A74FA30055CC66 /* icon-small.png in Resources */,
+				A784043B16A74FA30055CC66 /* icon-small@2x.png in Resources */,
+				A784043C16A74FA30055CC66 /* icon.png in Resources */,
+				A784043D16A74FA30055CC66 /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

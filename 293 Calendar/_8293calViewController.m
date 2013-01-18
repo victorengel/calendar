@@ -19,21 +19,14 @@
 @property int lastDayOfMonth;                //number of days in the displayed month
 @property int accumulator;                   //accumulator for the displayed month
 @property (strong, nonatomic) UIPopoverController* datePopover;
-//@property (nonatomic, retain) UIPickerView* calendarPickerView;
 
 @end
 
 @implementation _8293calViewController
-/*-(IBAction)PickerView:(id)sender
-{
-   pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 200, 320, 200)];
-   //pickerView.delegate = self;
-}*/
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-   NSLog(@"pickerView:numberOfRowsInComponent:");
    if (component==0) {
-      return [calPickerYearData count]; //hard code for now -- will need to calculate per component eventually.
+      return [calPickerYearData count];
    }
    if (component==1) {
       return [calPickerMonthData count];
@@ -45,13 +38,10 @@
 }
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-   NSLog(@"numberOfComponentsInPickerView:");
-   return 3; //start out with a 1 component picker for now.
+   return 3;
 }
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-   NSLog(@"pickerView:didSelectRow:inComponent:");
-   //
    NSString *selectedItem;
    if (component==0) {
       //Parse out the year from the selected item
@@ -60,46 +50,34 @@
       long newYear = [selectedItem longLongValue];
       if (newYear > self.year) {
          long elapsedYears = newYear - self.year;
-         NSLog(@"Elapsed years: %ld",elapsedYears);
          int acc = self.accumulator;
          long daysForward = 0;
          for (long i=1; i<=elapsedYears; i++) {
             daysForward += 365;
-            NSLog(@"Forward by %ld years = %ld days",i,daysForward);
             acc += 71;
             if (acc >=293) {
                acc -= 293;
                daysForward += 1;
-               NSLog(@"Because of acc: %d there is a leap day %ld",acc,daysForward);
             }
          }
          double secondsForward = daysForward * 86400.0;
-         NSLog(@"Seconds forward is %f",secondsForward);
-         NSLog(@"Fast forward that many seconds from %@",self.displayedDate);
          NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
-         NSLog(@"New year is calculated to be %@",newDate);
          [self showMonthContainingDate:newDate];
       } else if (newYear < self.year)
       {
          long elapsedYears = self.year - newYear;
-         NSLog(@"Elapsed years: %ld",elapsedYears);
          int acc = self.accumulator;
          long daysBackward = 0;
          for (long i=1; i<=elapsedYears; i++) {
             daysBackward += 365;
-            NSLog(@"Forward by %ld years = %ld days",i,daysBackward);
             acc -= 71;
             if (acc < 0) {
                acc += 293;
                daysBackward += 1;
-               NSLog(@"Because of acc: %d there is a leap day %ld",acc,daysBackward);
             }
          }
          double secondsForward = -1.0 * daysBackward * 86400.0;
-         NSLog(@"Seconds forward is %f",secondsForward);
-         NSLog(@"Fast forward that many seconds from %@",self.displayedDate);
          NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
-         NSLog(@"New year is calculated to be %@",newDate);
          [self showMonthContainingDate:newDate];
       }
    }
@@ -123,10 +101,7 @@
             }
          }
          double secondsForward = daysForward * 86400.0;
-         NSLog(@"Seconds forward is %f",secondsForward);
-         NSLog(@"Fast forward that many seconds from %@",self.displayedDate);
          NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
-         NSLog(@"New year is calculated to be %@",newDate);
          [self showMonthContainingDate:newDate];
       }
    }
@@ -149,78 +124,30 @@
             }
          } while (newAcc != acc);
          double secondsForward = daysForward * 86400.0;
-         NSLog(@"Seconds forward is %f",secondsForward);
-         NSLog(@"Fast forward that many seconds from %@",self.displayedDate);
          NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
-         NSLog(@"New year is calculated to be %@",newDate);
          [self showMonthContainingDate:newDate];
       }
    }
-   NSLog(@"Selected item: %@",selectedItem);
-   long selectedRow = [pickerView selectedRowInComponent:component];
-   NSLog(@"dsr SelectedRow is %ld",selectedRow);
-   NSString *selectedValue = [calPickerYearData objectAtIndex:selectedRow];
-   NSLog(@"dsr Selected value is %@>>>>>>>>",selectedValue);
+   //   long selectedRow = [pickerView selectedRowInComponent:component];
+   //NSString *selectedValue = [calPickerYearData objectAtIndex:selectedRow];
+   //NSLog(@"dsr Selected value is %@>>>>>>>>",selectedValue);
    //
 }
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-   NSLog(@"pickerView:titleForRow:%d forComponent:%d",row,component);
-   /*
-    [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",self.year+i]];
-    [calPickerMonthData addObject:[NSString stringWithFormat:@"%d",self.month+i]];
-    thisAccumulator = self.accumulator + i;
-    if (thisAccumulator<0) thisAccumulator += 293;
-    if (thisAccumulator>=293) thisAccumulator -= 293;
-    [calPickerAccData addObject:[NSString stringWithFormat:@"%d",thisAccumulator]];
-    */
    if (component==0) {
-      long selectedRow = [pickerView selectedRowInComponent:component];
-      NSLog(@"SelectedRow is %ld",selectedRow);
-      NSString *selectedValue = [calPickerYearData objectAtIndex:selectedRow];
-      NSLog(@"Selected value is %@>>>>>>>>",selectedValue);
-      //return [calPickerYearData objectAtIndex:row];
-      //po calPickerYearData
+      //long selectedRow = [pickerView selectedRowInComponent:component];
+      //      NSString *selectedValue = [calPickerYearData objectAtIndex:selectedRow];
       NSString *selectedYearString = [calPickerYearData objectAtIndex:row];
       if (row > [calPickerYearData count]-3) {
          //nearing the end of the array. Add more values.
          //long selectedRowOffset = selectedRow - row;
          long selectedYear = [[calPickerYearData objectAtIndex:[calPickerYearData count]-1] longLongValue];
-         //[calPickerYearData removeAllObjects];
          for (int i=0; i<=10; i++) {
             [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",selectedYear+i+1]];
          }
-         //[calPickerView selectRow:5+selectedRowOffset inComponent:component animated:NO];
          [calPickerView reloadAllComponents];
       }
-/*      if (row>[calPickerYearData count]-5) {
-         //nearing the end of the array. Add more values.
-         long selectedRowOffset = selectedRow - row;
-         long selectedYear = [selectedValue longLongValue];
-         [calPickerYearData removeAllObjects];
-         for (int i=-5; i<=5; i++) {
-            [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",selectedYear+i]];
-         }
-         [calPickerView selectRow:5+selectedRowOffset inComponent:component animated:NO];
-         [calPickerView reloadAllComponents];
-      }*/
-      /*if (selectedRow > 0) {
-         if (row == selectedRow) {
-            if (row != 0) {
-               //Reload the array so that the selected row is on line 5.
-               long selectedYear = [selectedYearString longLongValue];
-               //Update the array
-               [calPickerYearData removeAllObjects];
-               for (int i=-5; i<=5; i++) {
-                  [calPickerYearData addObject:[NSString stringWithFormat:@"%ld",selectedYear+i]];
-               }
-               row = 5;
-               //po calPickerYearData
-               [pickerView selectRow:row inComponent:component animated:NO];
-               //[calPickerView reloadAllComponents];
-            }
-         }
-      }*/
       return selectedYearString;
    }
    if (component==1) {
@@ -230,20 +157,16 @@
       return [calPickerAccData objectAtIndex:row];
    }
    return @"";
-   NSLog(@"pickerView:titleForRow:");
 }
 -(NSDate *)epoch {
-   NSLog(@"epoch");
    long epoch = 1356048000;
    NSDate *returnValue = [NSDate dateWithTimeIntervalSince1970:epoch];
    return returnValue;
 }
 - (void)showMonthContainingDate:(NSDate*)d
 {
-   NSLog(@"showMonthContainingDate");
    [self takedown];//Remove a previously displayed month, if present.
    self.displayedDate = d;
-   NSLog(@"showMonthContainingDate: self.displayedDate = %@",self.displayedDate);
    NSDate *epoch = [self epoch];
    NSTimeZone *currentTimeZone = [NSTimeZone localTimeZone];
    NSInteger currentGMTOffset = [currentTimeZone secondsFromGMTForDate:epoch];
@@ -273,7 +196,6 @@
    if (acc<28) daysInMonth = 29; else daysInMonth = 28;
    while (day >= daysInMonth) {
       //Update values appropriately for another month to elapse
-      //NSLog(@"Acc: %3d Month: %2d Year: %d Day: %ld",acc,month,year,day);
       day -= daysInMonth;
       month++;
       if (month>12) {
@@ -318,7 +240,6 @@
 }
 -(UILabel *)labelFromString:(NSString *)s
 {
-   //NSLog(@"labelFromString");
    UILabel *returnLabel = [[UILabel alloc] init];
    returnLabel.text = s;
    returnLabel.font = [UIFont boldSystemFontOfSize:30];
@@ -327,7 +248,6 @@
 }
 -(void)showHeading
 {
-   NSLog(@"showHeading");
    //Separate heading into its components
    //28/293 year
    UILabel *head1Label = [self labelFromString:[NSString stringWithFormat:@"Year: %ld ",self.year]];
@@ -373,25 +293,21 @@
 }
 -(void)viewWillLayoutSubviews
 {
-   NSLog(@"viewWillLayoutSubview");
    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
       //iPhone code goes here
    } else  {
       //ipad code goes here
-      NSLog(@"#######viewWillLayoutSubviews");
       NSDate *dayToDisplay = self.displayedDate;
       [self showMonthContainingDate:dayToDisplay];
    }
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-   NSLog(@"######viewWillAppear");
    NSDate *dayToDisplay = self.displayedDate;
    [self showMonthContainingDate:dayToDisplay];
 }
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-   NSLog(@"######willAnimateRotationToInterfaceOrientation");
    NSDate *dayToDisplay = self.displayedDate;
    [self showMonthContainingDate:dayToDisplay];
 }
@@ -406,11 +322,9 @@
    self.displayedDate = dayToDisplay;
 }
 - (IBAction)swipeIphone:(UISwipeGestureRecognizer *)sender {
-   NSLog(@"swipeIphone");
    [self swipe:sender];
 }
 - (IBAction)swipe:(UISwipeGestureRecognizer *)sender {
-   NSLog(@"swipe");
    //swipe right
    if (sender.direction == UISwipeGestureRecognizerDirectionRight) {
       self.displayedDate = [NSDate dateWithTimeInterval:-28*86400 sinceDate:self.displayedDate];
@@ -418,7 +332,6 @@
    }
 }
 - (IBAction)swipeLeftIphone:(UISwipeGestureRecognizer *)sender {
-   NSLog(@"swipeLeftIphone");
    [self swipeLeft:sender];
    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
       //iPhone code goes here
@@ -427,7 +340,6 @@
    }
 }
 - (IBAction)swipeLeft:(UISwipeGestureRecognizer *)sender {
-   NSLog(@"swipeLeft");
    if (sender.direction == UISwipeGestureRecognizerDirectionLeft) {
       //Calculate the new date to display by adding number of days in the current month to the displayed date.
       self.displayedDate = [NSDate dateWithTimeInterval:(self.lastDayOfMonth+1)*86400 sinceDate:self.displayedDate];
@@ -442,7 +354,6 @@
       if (revAcc < 71) {
          daysInYear = 366;
       }
-      NSLog(@"########## %d %d %d ##########",self.accumulator, revAcc, daysInYear);
       self.displayedDate = [NSDate dateWithTimeInterval:daysInYear*86400 sinceDate:self.displayedDate];
       [self showMonthContainingDate:self.displayedDate];
    }
@@ -456,13 +367,11 @@
       if (revAcc < 71) {
          daysInYear = -366;
       }
-      NSLog(@"########## %d %d %d ##########",self.accumulator, revAcc, daysInYear);
       self.displayedDate = [NSDate dateWithTimeInterval:daysInYear*86400 sinceDate:self.displayedDate];
       [self showMonthContainingDate:self.displayedDate];
    }
 }
 -(CGPoint) getDayCellDimensions {
-   NSLog(@"getDayCellDimensions");
    float dayWidth, dayHeight;     //Calculate size of day cells based on screen size and orientation.
    if(UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
       //do portrait work
@@ -473,13 +382,11 @@
       dayWidth = self.view.bounds.size.width/7;
       dayHeight = (self.view.bounds.size.height-100)/5;
    }
-   NSLog(@"###The calculated cell dimensions are %f,%f",dayWidth,dayHeight);
    return CGPointMake(dayWidth, dayHeight);
 }
 
 -(void)displayMonthContainingDate:(long)date day:(int)d month:(int)m year:(long)year dow:(int)dow acc:(int)acc gregDate:(NSDate *)dayToDisplay
 {
-   NSLog(@"displayMonthContainingDate:day:month:year:dow:acc:gregDate:");
    //Display the month in the 28/293 calendar containing date dayToDisplay.
    
    //Explanation of the arguments.
@@ -574,7 +481,6 @@
       [calPickerView selectRow:1209 inComponent:0 animated:NO];
       [calPickerView selectRow:1209 inComponent:1 animated:NO];
       [calPickerView selectRow:1209 inComponent:2 animated:NO];
-      NSLog(@"Row selected programmatically");
       [popoverView addSubview:calPickerView];
       popoverContent.view = popoverView;
       UIPopoverController * popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
@@ -588,7 +494,6 @@
 //Date picker in popover
 -(void)selectADate: (CGPoint)p
 {
-   NSLog(@"selectADate");
    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
    datePicker.frame=CGRectMake(0,44,320, 216);
    datePicker.datePickerMode = UIDatePickerModeDate;
@@ -611,7 +516,6 @@
    }
 }
 - (IBAction)tap:(UITapGestureRecognizer *)sender {
-   NSLog(@"tap:");
    //First check if a date picker is on screen, in which case dismiss it if tap is outside of date picker
    for (UIDatePicker *datePicker in self.view.superview.subviews) {
       if (datePicker.tag == 10) {
@@ -636,46 +540,43 @@
                if ([dayElement isKindOfClass:[UILabel class]]) {
                   if (dayElement.tag == 1) {
                      //Only one item in this loop will get here since the month is tiled with views with tag 1.
-                     NSLog(@"Found a subview %@",dayElement.text);
                      int daySelected = [dayElement.text intValue];
                      long daysForward = daySelected - self.day;
                      if (daysForward == 0) {
                         //User tapped date already selected as current date. In this case, let's find the first special day for this month
                         //and day combination.
                         //int monthNumber = self.month;
-                        NSLog(@"Tapped currently selected day. Find associated special day.");
                         int dayNumber = self.day;
-                        NSLog(@"Day number is %d",dayNumber);
                         int thisAcc = self.accumulator;
                         //int daysToEndOfMonth = 12;
                         int targetAccumulator = 28 - dayNumber; // the "special" anniversary is on a special day, all months containing
                                                                 // a special day have a day 28.
-                        NSLog(@"Target accumulator is %d",targetAccumulator);
-                        //Make an adjustment depending on whether the special day is before or after the target day in the current month.
-                        if (thisAcc<28) {
+                        if (targetAccumulator == thisAcc) {
+                           //The day tapped is a special day. Go to the next special day.
+                           daysForward = 294;
+                        } else {
+                           //Make an adjustment depending on whether the special day is before or after the target day in the current month.
+                           if (thisAcc<28) {
                               daysForward += 1;
-                        }
-                        while (targetAccumulator != thisAcc) {
-                           thisAcc += 71;
-                           daysForward += 365;
-                           NSLog(@"Jumping 365 days to new accumulator: %d, days forward: %ld",thisAcc, daysForward);
-                           if (thisAcc >= 293) {
-                              daysForward++;
-                              NSLog(@"Leap day %ld",daysForward);
-                              thisAcc -= 293;
                            }
+                           while (targetAccumulator != thisAcc) {
+                              thisAcc += 71;
+                              daysForward += 365;
+                              if (thisAcc >= 293) {
+                                 daysForward++;
+                                 thisAcc -= 293;
+                              }
+                           }
+                           daysForward--; //Since the day we're landing on is the special day, we don't need to add an extra day for it.
                         }
-                        daysForward--; //Since the day we're landing on is the special day, we don't need to add an extra day for it.
                         double secondsForward = 86400.0*daysForward;
                         NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
-                        NSLog(@"New date is calculated to be %@",newDate);
                         self.displayedDate = newDate;
                         [self showMonthContainingDate:newDate];
                         return; //If a day cell was tapped, then a picker was not selected nor was the header tapped, so return.
                      } else {
                         double secondsForward = 86400*daysForward;
                         NSDate *newDate = [NSDate dateWithTimeInterval:secondsForward sinceDate:self.displayedDate];
-                        NSLog(@"New date is calculated to be %@",newDate);
                         self.displayedDate = newDate;
                         [self showMonthContainingDate:newDate];
                         return; //If a day cell was tapped, then a picker was not selected nor was the header tapped, so return.
@@ -691,24 +592,19 @@
          // Now check which component of the heading was tapped.
          for (UILabel *headingLabel in dayCell.subviews) {
             if (headingLabel.tag == 1004) {
-               NSLog(@"head4 frame is %@",NSStringFromCGRect(headingLabel.frame));
                if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:dayCell])) {
-                  NSLog(@"The heading was tapped");
                   tapRequestsDatePicker = YES;
                }
             } else if (headingLabel.tag == 1001) {
                if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:dayCell])) {
-                  NSLog(@"The 28/293 year was tapped");
                   tapRequestsYearPicker = YES;
                }
             } else if (headingLabel.tag == 1002) {
                if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:dayCell])) {
-                  NSLog(@"The 28/293 month was tapped");
                   tapRequestsMonthPicker = YES;
                }
             } else if (headingLabel.tag == 1003) {
                if (CGRectContainsPoint(headingLabel.frame, [sender locationInView:dayCell])) {
-                  NSLog(@"The 28/293 accumulator was tapped");
                   tapRequestsAccPicker = YES;
                }
             }
@@ -724,16 +620,12 @@
 }
 - (void)pickerChanged:(id)sender
 {
-   NSLog(@"pickerChanged:");
-   NSLog(@"value: %@",[sender date]);
    self.displayedDate = [sender date];
-   NSLog(@"Updated date is %@",self.displayedDate);
    [self showMonthContainingDate:[sender date]];
 }
 -(void)takedown
 {
    //remove displayed month
-   NSLog(@"Takedown");
    for (UIView *dayFrame in self.view.subviews) {
       //NSLog(@"   Takedown");
       for (UIView *dayCell in dayFrame.subviews) {
@@ -747,7 +639,6 @@
 }
 - (void)didReceiveMemoryWarning
 {
-   NSLog(@"didReceiveMemoryWarning");
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
